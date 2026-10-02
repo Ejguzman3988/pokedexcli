@@ -31,6 +31,57 @@ type resData struct {
 	Results  []mapData `json:"results"`
 }
 
+type exploreResData struct {
+	Results []Pokemon `json:"pokemon_encounters"`
+}
+
+type Pokemon struct {
+	Pokemon pokeData `json:"pokemon"`
+}
+
+type pokeData struct {
+	Name string `json:"name"`
+}
+
+func (c *Client) GetEncounters(pageUrl string) (exploreResData, error) {
+	body, exist := c.Cache.Get(pageUrl)
+
+	if !exist {
+
+		req, err := http.NewRequest("GET", pageUrl, nil)
+
+		if err != nil {
+			log.Fatal(err)
+			return exploreResData{}, err
+		}
+
+		res, err := c.httpClient.Do(req)
+
+		if err != nil {
+			log.Fatal(err)
+			return exploreResData{}, err
+		}
+
+		body, err = io.ReadAll(res.Body)
+		res.Body.Close()
+
+		if err != nil {
+			log.Fatal(err)
+			return exploreResData{}, err
+		}
+
+		c.Cache.Add(pageUrl, body)
+	}
+
+	pokemons := exploreResData{}
+
+	if err := json.Unmarshal(body, &pokemons); err != nil {
+		return exploreResData{}, err
+	}
+
+	return pokemons, nil
+}
+
 func (c *Client) GetLocations(pageUrl string) (resData, error) {
 
 	body, exist := c.Cache.Get(pageUrl)
@@ -72,6 +123,7 @@ func (c *Client) GetLocations(pageUrl string) (resData, error) {
 	c.Locations.Prev = locations.Previous
 
 	return locations, nil
+
 }
 
 func NewClient(timeout, cacheInterval time.Duration) Client {

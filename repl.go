@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"strings"
 )
 
 func repl(con *config) {
@@ -13,11 +14,24 @@ func repl(con *config) {
 	for true {
 		fmt.Print("Pokedex > ")
 		scanner.Scan()
-		text := scanner.Text()
+		fullText := scanner.Text()
 
-		command, ok := con.commands[text]
+		textSlice := strings.Fields(fullText)
+
+		// Define Args -- allow for no args
+		var args []string
+		if len(textSlice) > 1 {
+			args = textSlice[1:]
+		}
+
+		var command string
+		if len(textSlice) > 0 {
+			command = textSlice[0]
+		}
+
+		c, ok := con.commands[command]
 		if ok {
-			command.callback(con)
+			c.callback(con, args)
 		} else {
 			fmt.Println("Unknown command")
 		}

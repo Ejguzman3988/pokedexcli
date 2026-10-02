@@ -5,13 +5,13 @@ import (
 	"os"
 )
 
-func commandExit(con *config) error {
+func commandExit(con *config, args []string) error {
 	fmt.Println("Closing the Pokedex... Goodbye!")
 	os.Exit(0)
 	return nil
 }
 
-func commandHelp(con *config) error {
+func commandHelp(con *config, args []string) error {
 	fmt.Println()
 	fmt.Println("Welcome to the Pokedex!")
 	fmt.Println("Usage:")
@@ -39,17 +39,17 @@ func getCommands() map[string]cliCommand {
 		"map": {
 			name:        "map",
 			description: "Displays the names of 20 location areas in the Pokemon World.",
-			callback:    mapCmd("next"),
+			callback:    mapCmd("listNext"),
 		},
 		"mapb": {
 			name:        "mapb",
 			description: "Displays the names of 20 location areas in the Pokemon World.",
-			callback:    mapCmd("prev"),
+			callback:    mapCmd("listPrev"),
 		},
 		"explore": {
 			name:        "explore",
 			description: "Add argument to the explore cmd to list pokemon in that area",
-			callback:    mapExplore,
+			callback:    mapCmd("explore"),
 		},
 	}
 
