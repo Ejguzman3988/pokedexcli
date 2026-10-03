@@ -21,9 +21,9 @@ func mapCmd(command string) func(con *config, args []string) error {
 
 		if command == "explore" {
 			if len(args) == 0 {
-				errMsg := fmt.Sprintf("No Args Passed, try again")
+				errMsg := fmt.Errorf("No Args Passed, try again")
 				fmt.Println(errMsg)
-				return fmt.Errorf(errMsg)
+				return errMsg
 
 			}
 			area := args[0]

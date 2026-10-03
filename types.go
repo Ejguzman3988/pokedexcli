@@ -11,6 +11,7 @@ type cliCommand struct {
 }
 
 type config struct {
+	pokedex    map[string]PokemonResData
 	commands   map[string]cliCommand
 	httpClient Client
 }

@@ -10,6 +10,7 @@ func main() {
 	con := &config{
 		commands:   getCommands(),
 		httpClient: NewClient(5*time.Second, 5*time.Minute),
+		pokedex:    map[string]PokemonResData{},
 	}
 	repl(con)
 }
